@@ -1,7 +1,65 @@
-import React from 'react'
+import { useState } from "react";
+import Navbar from "../components/Navbar";
+import RateLimitedUI from "../components/RateLimitedUI";
+import { useEffect } from "react";
+import toast from "react-hot-toast";
+import api from "../lib/axios";
 
-export default function HomePage() {
+import NoteCard from "../components/NoteCard";
+import { LoaderIcon } from "lucide-react";
+import NotFoundPage from "../components/NotFoundPage";
+
+const HomePage = () => {
+  const [isRateLimited, setIsRateLimited] = useState(false);
+  const [notes, setNotes] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchNotes = async () => {
+      try {
+        const res = await api.get("/notes");
+        setNotes(res.data);
+        setIsRateLimited(false);
+        
+      } catch (error) {
+        console.log("Error fetching notes");
+        if (error.response?.status === 429) {
+          setIsRateLimited(true);
+          toast.error("Rate limit exceeded. Please try again later.");
+        } else {
+          toast.error("Failed to load notes");
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNotes();
+  }, []);
+
   return (
-    <div>HomePage</div>
-  )
-}
+    <div className="min-h-screen">
+      <Navbar />
+
+      {isRateLimited && <RateLimitedUI/>  && <NotFoundPage/>}
+
+      <div className="max-w-4xl p-4 mx-auto mt-6">
+        {loading && (
+          <div className="flex items-center justify-center min-h-screen">
+            <LoaderIcon className="w-12 h-12 text-yellow-500 animate-spin" />
+          </div>
+        )}
+
+        {notes.length > 0 && !isRateLimited && (
+          <div className="grid w-full grid-cols-1 gap-6 p-6 sm:grid-cols-2 lg:grid-cols-3"
+>
+            {notes.map((note) => (
+              <NoteCard key={note._id} note={note} setNotes={setNotes} />
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+export default HomePage;
