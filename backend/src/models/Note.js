@@ -1,7 +1,4 @@
-import mongoose, { model } from 'mongoose';
-import dotenv from 'dotenv';
-
-dotenv.config();
+import mongoose from 'mongoose';
 
 const noteSchema = new mongoose.Schema({
     title: {
