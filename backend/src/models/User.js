@@ -11,12 +11,12 @@ const userSchema = new mongoose.Schema({
         required: true
     },
     email: [{
-        value: String,
-        type: String
+        type: String,
+        default: ""
     }],
     avatar: [{
-        value: String,
-        type: String
+        type: String,
+        default: ""
     }]
 }, { timestamps: true });
 

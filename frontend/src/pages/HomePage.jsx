@@ -41,7 +41,7 @@ const HomePage = ({user, setUser}) => {
     <div className="min-h-screen">
       <Navbar user={user} setUser={setUser} />
 
-      {isRateLimited && <RateLimitedUI/>  && <NotFoundPage/>}
+      {isRateLimited && <RateLimitedUI />}
 
       <div className="max-w-4xl p-4 mx-auto mt-6">
         {loading && (

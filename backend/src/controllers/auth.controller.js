@@ -3,10 +3,11 @@ const googleAuthCallback = (req, res) => {
     req.session.save((err) => {
         if (err) {
             console.error("Session save error:", err);
-            return res.redirect("http://localhost:5173/login");
+            const redirectUrl = process.env.CLIENT_URL ? `${process.env.CLIENT_URL.replace(/\/$/, '')}/login` : '/login';
+            return res.redirect(redirectUrl);
         }
-        // Only redirect after the session is safely stored
-        res.redirect("http://localhost:5173"); 
+        const redirectUrl = process.env.CLIENT_URL ? process.env.CLIENT_URL : '/';
+        res.redirect(redirectUrl); 
     });
 };
 
