@@ -1,34 +1,55 @@
-import React, { useState, useEffect } from 'react';
-import { PlusCircle, Sun, Moon } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import React from 'react';
+import { PlusCircle, Sun, Moon, LogOut } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import api from '../lib/axios';
+import toast from 'react-hot-toast';
 
-export default function Navbar() {
-  const [theme, setTheme] = useState('cmyk');
+export default function Navbar({ user, setUser }) {
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-  }, [theme]);
-
+  const currentTheme = document.documentElement.getAttribute("data-theme") || "dark";
 
   const toggleTheme = () => {
-    setTheme((prev) => (prev === 'cmyk' ? 'dracula' : 'cmyk'));
+    const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    
+    document.documentElement.setAttribute('data-theme', nextTheme);
+    localStorage.setItem("mindvault-theme", nextTheme);
+    
+    sessionStorage.setItem("theme-changed-toast", `Switched to ${nextTheme} mode workspace`);
+    
+    navigate(0); 
+  };
+
+  // Handle killing the session cookie on backend and clearing state
+  const handleLogout = async () => {
+    try {
+      await api.get('/auth/logout');
+      setUser(null); 
+      toast.success('Logged out securely');
+      navigate('/login'); 
+    } catch (error) {
+      console.error('Logout error:', error);
+      toast.error('Failed to log out cleanly');
+    }
   };
 
   return (
     <header className="px-4 shadow-md navbar bg-base-100">
       {/* Brand Logo */}
       <div className="navbar-start">
-        <a className="text-xl font-bold tracking-wide normal-case btn btn-ghost text-primary">
+        <Link to="/" className="text-xl font-bold tracking-wide normal-case btn btn-ghost text-primary">
           MindVault
-        </a>
+        </Link>
       </div>
 
       {/* Action Buttons */}
-      <div className="gap-4 navbar-end">
-        <Link to={'/create'} className="gap-2 btn btn-warning btn-sm md:btn-md">
-          <PlusCircle size={20} />
-          <span className="hidden sm:inline">New</span>
-        </Link>
+      <div className="gap-2 sm:gap-4 navbar-end">
+        {user && (
+          <Link to={'/create'} className="gap-2 btn btn-warning btn-sm md:btn-md">
+            <PlusCircle size={20} />
+            <span className="hidden sm:inline">New Note</span>
+          </Link>
+        )}
 
         {/* Theme Toggle Button */}
         <button
@@ -36,14 +57,40 @@ export default function Navbar() {
           className="btn btn-circle btn-ghost btn-sm md:btn-md"
           aria-label="Toggle theme"
         >
-          {theme === 'cmyk' ? (
-            <Moon size={20} className="text-base-content" />
+          {/* 4. FIXED: Renders Moon icon during Light Mode, and Sun icon during Dark Mode */}
+          {currentTheme === 'light' ? (
+            <Moon size={20} className="text-neutral" />
           ) : (
-            <Sun size={20} className="text-warning" />
+            <Sun size={20} className="text-warning animate-pulse" />
           )}
         </button>
               
-        <a className="btn btn-neutral btn-sm md:btn-md">Login</a>
+        {/* Dynamic Auth Section Layout */}
+        {user ? (
+          <div className="flex items-center gap-4">
+            {/* User Google Avatar Image Display */}
+            <div className="avatar tooltip tooltip-bottom" data-tip={user.name}>
+              <div className="w-8 h-8 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 md:w-10 md:h-10">
+                <img 
+                  src={user.avatar || "https://unsplash.com"} 
+                  alt={user.name} 
+                  referrerPolicy="no-referrer" 
+                />
+              </div>
+            </div>
+
+            {/* Logout Trigger Button */}
+            <button 
+              onClick={handleLogout}
+              className="gap-1 btn btn-primary btn-sm md:btn-md"
+            >
+              <LogOut size={16} />
+              <span className="hidden md:inline">Logout</span>
+            </button>
+          </div>
+        ) : (
+          <Link to="/login" className="btn btn-neutral btn-sm md:btn-md">Login</Link>
+        )}
       </div>
     </header>
   );

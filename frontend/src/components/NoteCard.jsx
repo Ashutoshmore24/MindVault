@@ -3,7 +3,7 @@ import { PenSquareIcon, Trash2Icon } from "lucide-react";
 import toast from "react-hot-toast";
 import { formatDate } from "../lib/utils";
 import { Link } from "react-router-dom";
-import api from "../lib/axios";
+import api from "../lib/axios.js";
 
 const NoteCard = ({ note, setNotes }) => {
   const handleDelete = async (e, id) => {
@@ -13,17 +13,13 @@ const NoteCard = ({ note, setNotes }) => {
     if (!window.confirm("Are you sure you want to delete this note?")) return;
 
     try {
-      await api.delete(`/notes/${id}`);
+      await api.delete(`/api/notes/${id}`);
       setNotes((prev) => prev.filter((item) => item._id !== id));
       toast.success("Note deleted successfully");
     } catch (error) {
       console.log("Error in handleDelete", error);
       toast.error("Failed to delete note");
     }
-  };
-
-  const handleCardClick = () => {
-    navigate(`/notes/${note._id}`);
   };
 
   return (
@@ -54,15 +50,14 @@ const NoteCard = ({ note, setNotes }) => {
           </span>
           
           <div className="flex items-center gap-1">
-            {/* Edit Button */}
-            <Link
-              to={`/notes/${note._id}`}
-              onClick={(e) => e.stopPropagation()}
+            {/* Edit Button Wrapper - FIXED: Changed Link to span to prevent nested link bugs */}
+            <span
+              onClick={(e) => e.stopPropagation()} // Keeps clicking the icon smooth without parent triggers
               className="transition-all rounded-md btn btn-ghost btn-xs text-base-content/60 hover:text-info hover:bg-info/10"
               title="Edit Note"
             >
               <PenSquareIcon className="size-4" />
-            </Link>
+            </span>
             
             {/* Delete Button */}
             <button
