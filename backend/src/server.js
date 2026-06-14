@@ -39,7 +39,7 @@ app.use(passport.session());
 
 app.use(express.json());  
 app.use(express.urlencoded({ extended: true }));
-// app.use(rateLimiter);
+app.use(rateLimiter);
 
 app.use('/api/notes', notesRoutes);
 app.use('/auth', authRoutes);
