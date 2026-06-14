@@ -2,6 +2,11 @@ import React from "react";
 import { LogInIcon } from "lucide-react";
 
 export default function LoginPage() {
+
+  const GOOGLE_AUTH_URL = import.meta.env.MODE === "development" 
+  ? 'http://localhost:5000/auth/google' 
+    : '/auth/google';
+  
   return (
     <div className="flex items-center justify-center min-h-screen px-4">
       {/* Login Card Wrapper */}
@@ -30,7 +35,7 @@ export default function LoginPage() {
 
         {/* OAuth Anchor Button */}
         <a
-          href="http://localhost:5000/auth/google"
+          href={GOOGLE_AUTH_URL}
           className="btn btn-block bg-white hover:bg-neutral-100 text-neutral font-semibold border-none rounded-xl flex items-center justify-center gap-3 transition-all duration-300 transform hover:-translate-y-0.5 active:translate-y-0 shadow-lg"
         >
           {/* Flat Google SVG Icon */}

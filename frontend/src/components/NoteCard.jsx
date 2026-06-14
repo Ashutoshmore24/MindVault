@@ -52,7 +52,6 @@ const NoteCard = ({ note, setNotes }) => {
           <div className="flex items-center gap-1">
             {/* Edit Button Wrapper - FIXED: Changed Link to span to prevent nested link bugs */}
             <span
-              onClick={(e) => e.stopPropagation()} // Keeps clicking the icon smooth without parent triggers
               className="transition-all rounded-md btn btn-ghost btn-xs text-base-content/60 hover:text-info hover:bg-info/10"
               title="Edit Note"
             >

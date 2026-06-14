@@ -1,5 +1,7 @@
 import Note from '../models/Note.js';
 
+
+
 async function getAllNotes(req, res) {
     try {
         const notes = await Note.find({user:req.user._id}).sort({createdAt:-1});  //newest one
@@ -13,7 +15,7 @@ async function getAllNotes(req, res) {
     
 async function getNoteById(req, res) {
     try {
-        const existingNote = await Note.findById({_id: req.params.id, user: req.user._id });
+        const existingNote = await Note.findOne({ _id: req.params.id, user: req.user._id });
         if (!existingNote) return res.status(404).json({ message: `Note with id:${req.params.id} Not Found` });
 
         res.status(200).json({ existingNote });
@@ -48,7 +50,7 @@ async function updateNote(req, res) {
     try {
         const { title, content } = req.body;
         
-        const updatedNote = await Note.findByIdAndUpdate( { _id: req.params.id, user: req.user._id }, 
+        const updatedNote = await Note.findOneAndUpdate( { _id: req.params.id, user: req.user._id }, 
             { title, content }, 
             { new: true });
         if (!updatedNote) {
@@ -64,7 +66,7 @@ async function updateNote(req, res) {
 
 async function deleteNote(req, res) {
     try {
-        const deletedNote = await Note.findByIdAndDelete({ _id: req.params.id, user: req.user._id });
+        const deletedNote = await Note.findOneAndDelete({ _id: req.params.id, user: req.user._id });
         if (!deletedNote) {
             return res.status(500).json({message:"Note not found"})
         }
