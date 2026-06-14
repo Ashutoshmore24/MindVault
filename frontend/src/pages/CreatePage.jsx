@@ -21,7 +21,7 @@ export default function CreatePage() {
 
     setLoading(true);
     try {
-      await api.post("/notes", {
+      await api.post("/api/notes", {
         title,
         content,
       });
@@ -30,7 +30,7 @@ export default function CreatePage() {
       navigate("/");
     } catch (error) {
       console.log("Error creating note", error);
-      if (error.response.status === 429) {
+      if (error.response?.status === 429) {
         toast.error("Slow down! You're creating notes too fast", {
           duration: 4000,
           icon: "💀",
@@ -45,33 +45,33 @@ export default function CreatePage() {
   
     return (
       <div className="min-h-screen bg-base-200">
-        <div className="container px-4 py-8 mx-auto">
-          <div className="max-w-2xl mx-auto">
-            <Link to={"/"} className="mb-6 btn btn-ghost">
-              <ArrowLeftIcon className="size-5" />
-              Back to Notes
-            </Link>
+      <div className="container px-4 py-8 mx-auto">
+        <div className="max-w-2xl mx-auto">
+          <Link to={"/"} className="mb-6 btn btn-ghost">
+            <ArrowLeftIcon className="size-5" />
+            Back to Notes
+          </Link>
 
-            <div className="card bg-base-100">
-              <div className="card-body">
-                <h2 className="mb-4 text-2xl card-title">Create New Note</h2>
-                <form onSubmit={handleSubmit}>
-                  <div className="mb-4 form-control">
-                    <label className="label">
-                      <span className="label-text">Title</span>
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="Note Title"
-                      className="input input-bordered"
-                      value={title}
-                      onChange={(e) => setTitle(e.target.value)}
-                    />
-                  </div>
+          <div className="card bg-base-100">
+            <div className="card-body">
+              <h2 className="mb-4 text-2xl card-title">Create New Note</h2>
+              <form onSubmit={handleSubmit}>
+                <div className="mb-4 form-control">
+                  <label className="label">
+                    <span className="label-text">Title</span>
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Note Title"
+                    className="input input-bordered"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                  />
+                </div>
 
-                  <div className="mb-4 form-control">
-                    <label className="label">
-                      <span className="label-text">Content</span>
+                <div className="mb-4 form-control">
+                  <label className="label">
+                    <span className="label-text">Content</span>
                     </label>
                     <textarea
                       placeholder="Write your note here..."

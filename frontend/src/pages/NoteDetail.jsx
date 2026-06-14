@@ -16,7 +16,7 @@ export default function NoteDetail() {
   useEffect(() => {
     const fetchNote = async () => {
       try {
-        const res = await api.get(`/notes/${id}`);
+        const res = await api.get(`/api/notes/${id}`);
         console.log("Fetched note:", res.data);
         setNote(res.data.existingNote);
       } catch (error) {
@@ -34,7 +34,7 @@ export default function NoteDetail() {
     if (!window.confirm("Are you sure you want to delete this note?")) return;
 
     try {
-      await api.delete(`/notes/${id}`);
+      await api.delete(`/api/notes/${id}`);
       toast.success("Note deleted successfully");
       navigate("/");
     } catch (error) {
@@ -51,7 +51,7 @@ export default function NoteDetail() {
     setSaving(true);
     
     try {
-      await api.put(`/notes/${id}`, note);
+      await api.put(`/api/notes/${id}`, note);
       toast.success("Note updated successfully");
       navigate("/");
     } catch (error) {

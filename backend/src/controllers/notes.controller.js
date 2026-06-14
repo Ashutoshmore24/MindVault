@@ -2,7 +2,7 @@ import Note from '../models/Note.js';
 
 async function getAllNotes(req, res) {
     try {
-        const notes = await Note.find().sort({createdAt:-1});  //newest one
+        const notes = await Note.find({user:req.user._id}).sort({createdAt:-1});  //newest one
         res.status(200).json(notes);
     } catch (error) {
         res.status(500).json({ message : "Internal Server Error in Fetching Notes" });
@@ -13,7 +13,7 @@ async function getAllNotes(req, res) {
     
 async function getNoteById(req, res) {
     try {
-        const existingNote = await Note.findById(req.params.id);
+        const existingNote = await Note.findById({_id: req.params.id, user: req.user._id });
         if (!existingNote) return res.status(404).json({ message: `Note with id:${req.params.id} Not Found` });
 
         res.status(200).json({ existingNote });
@@ -32,7 +32,8 @@ async function createNote(req, res) {
         const newNote = new Note(
             {
                 title,
-                content
+                content,
+                user: req.user._id 
             });
 
         const savedNote = await newNote.save();
@@ -47,7 +48,9 @@ async function updateNote(req, res) {
     try {
         const { title, content } = req.body;
         
-        const updatedNote = await Note.findByIdAndUpdate(req.params.id, { title, content }, {new:true});
+        const updatedNote = await Note.findByIdAndUpdate( { _id: req.params.id, user: req.user._id }, 
+            { title, content }, 
+            { new: true });
         if (!updatedNote) {
             return res.status(404).json({ message: "Note Not Found" });
         }
@@ -61,7 +64,7 @@ async function updateNote(req, res) {
 
 async function deleteNote(req, res) {
     try {
-        const deletedNote = await Note.findByIdAndDelete(req.params.id);
+        const deletedNote = await Note.findByIdAndDelete({ _id: req.params.id, user: req.user._id });
         if (!deletedNote) {
             return res.status(500).json({message:"Note not found"})
         }

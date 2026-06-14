@@ -9,7 +9,7 @@ import NoteCard from "../components/NoteCard";
 import { LoaderIcon } from "lucide-react";
 import NotFoundPage from "../components/NotFoundPage";
 
-const HomePage = () => {
+const HomePage = ({user, setUser}) => {
   const [isRateLimited, setIsRateLimited] = useState(false);
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -17,7 +17,7 @@ const HomePage = () => {
   useEffect(() => {
     const fetchNotes = async () => {
       try {
-        const res = await api.get("/notes");
+        const res = await api.get("/api/notes");
         setNotes(res.data);
         setIsRateLimited(false);
         
@@ -39,7 +39,7 @@ const HomePage = () => {
 
   return (
     <div className="min-h-screen">
-      <Navbar />
+      <Navbar user={user} setUser={setUser} />
 
       {isRateLimited && <RateLimitedUI/>  && <NotFoundPage/>}
 
@@ -50,6 +50,13 @@ const HomePage = () => {
           </div>
         )}
 
+{!loading && !isRateLimited && notes.length === 0 && (
+          <div className="py-12 text-center text-neutral-content/60">
+            <p className="text-lg font-medium">Your vault is empty.</p>
+            <p className="mt-1 text-sm">Start by capturing your first thought!</p>
+          </div>
+        )}
+        
         {notes.length > 0 && !isRateLimited && (
           <div className="grid w-full grid-cols-1 gap-6 p-6 sm:grid-cols-2 lg:grid-cols-3"
 >
