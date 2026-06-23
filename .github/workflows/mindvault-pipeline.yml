@@ -67,6 +67,9 @@ jobs:
           UPSTASH_REDIS_REST_URL: https://upstash.io
           UPSTASH_REDIS_REST_TOKEN: mock_token
           MONGO_URL: mongodb://localhost:27017/mockdb
+          GOOGLE_CLIENT_ID: mock_google_client_id_://googleusercontent.com
+          GOOGLE_CLIENT_SECRET: mock_google_client_secret_abcde
+          CALLBACK_URL: http://localhost:5000/auth/google/callback
 
   # JOB 3: Automate Release to Render
   deploy-to-render:
