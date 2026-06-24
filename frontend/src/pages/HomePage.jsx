@@ -7,9 +7,9 @@ import api from "../lib/axios";
 
 import NoteCard from "../components/NoteCard";
 import { LoaderIcon, SearchIcon } from "lucide-react";
-import NotFoundPage from "../components/NotFoundPage";
+import NotFoundPage from "../components/NotFoundPage.jsx";
 
-const HomePage = ({ user, setUser }) => {
+const HomePage = ({user,setUser}) => {
   const [isRateLimited, setIsRateLimited] = useState(false);
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -101,7 +101,7 @@ const HomePage = ({ user, setUser }) => {
             <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
               {filteredNotes.length > 0 ? (
                 filteredNotes.map((note) => (
-                  <NoteCard key={note._id} note={note} />
+                  <NoteCard key={note._id} note={note} setNotes={setNotes} />
                 ))
               ) : (
                 <div className="col-span-3 py-12 text-center border border-gray-700 border-dashed bg-gray-800/50 rounded-xl">
