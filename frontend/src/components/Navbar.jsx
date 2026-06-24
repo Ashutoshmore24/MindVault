@@ -34,13 +34,13 @@ export default function Navbar({ user, setUser }) {
   };
 
   return (
-    <header className="px-4 shadow-md navbar bg-base-100">
-      {/* Brand Logo */}
-      <div className="navbar-start">
-        <Link to="/" className="text-xl font-bold tracking-wide normal-case btn btn-ghost text-primary">
-          MindVault
-        </Link>
-      </div>
+    <header className="sticky top-0 z-50 px-4 shadow-md navbar bg-base-100/90 backdrop-blur-md">
+    {/* Brand Logo */}
+    <div className="navbar-start">
+      <Link to="/" className="text-xl font-bold tracking-wide normal-case btn btn-ghost text-primary">
+        MindVault
+      </Link>
+    </div>
 
       {/* Action Buttons */}
       <div className="gap-2 sm:gap-4 navbar-end">
